@@ -8,7 +8,8 @@ import {
 import { 
     validateId,
     validatePathName,
-    validatePostName
+    validatePostName,
+    ensurePathData
 } from "./middleware";
 
 const App: Application = express()
@@ -21,7 +22,7 @@ App.get(`${baseURL}`, getProducts)
 App.get(`${baseURL}/:id`, validateId, getProductsByID)
 
 App.post(`${baseURL}`, validatePostName, postProducts)
-App.patch(`${baseURL}/:id`, validateId, validatePathName, patchProducts)
+App.patch(`${baseURL}/:id`, validateId, validatePathName, ensurePathData, patchProducts)
 
 App.listen(3000, () => {
     console.log("Server is running!")

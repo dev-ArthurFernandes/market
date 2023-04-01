@@ -47,8 +47,18 @@ const validatePathName = (req: Request, res: Response, next: NextFunction): Resp
 
 }
 
+const ensurePathData = (req: Request, res: Response, next: NextFunction): Response | void => {
+
+    delete req.body?.id
+    delete req.body?.section
+    delete req.body?.expirationDate
+
+    return next()
+}
+
 export {
     validateId,
     validatePostName,
-    validatePathName
+    validatePathName,
+    ensurePathData
 }
