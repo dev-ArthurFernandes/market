@@ -78,10 +78,20 @@ const patchProducts = (req: Request, res: Response): Response => {
     return res.json(product)
 }
 
+const deleteProduct = (req: Request, res: Response): Response => {
+
+    const id: number = parseInt(req.params.id)
+
+    products.splice(id - 1,1)
+
+    return res.status(204).send()
+}
+
 
 export {
     getProducts,
     getProductsByID,
     postProducts,
-    patchProducts
+    patchProducts,
+    deleteProduct
 }

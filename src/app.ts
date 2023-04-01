@@ -3,7 +3,8 @@ import {
     getProducts, 
     getProductsByID,
     postProducts,
-    patchProducts
+    patchProducts,
+    deleteProduct
 } from "./logics"
 import { 
     validateId,
@@ -23,6 +24,8 @@ App.get(`${baseURL}/:id`, validateId, getProductsByID)
 
 App.post(`${baseURL}`, validatePostName, postProducts)
 App.patch(`${baseURL}/:id`, validateId, validatePathName, ensurePathData, patchProducts)
+
+App.delete(`${baseURL}/:id`, validateId, deleteProduct)
 
 App.listen(3000, () => {
     console.log("Server is running!")
