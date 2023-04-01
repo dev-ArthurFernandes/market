@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { products } from "./database";
+import { IProduct } from "./intefaces";
 
 const validateId = (req: Request, res: Response, next: NextFunction): Response | void => {
 
     const requestId: number = parseInt(req.params.id)
-    
+
     products.forEach((product) => {
         if(product.id === requestId){
             return next()
@@ -12,26 +13,52 @@ const validateId = (req: Request, res: Response, next: NextFunction): Response |
     })
 
     return res.status(404).json({
-        "message": "Product not found"
+        "error": "Product not found"
     })
 }
 
-const validateName = (req: Request, res: Response, next: NextFunction): Response |  void => {
+const validatePostName = (req: Request, res: Response, next: NextFunction): Response |  void => {
 
-    const name: string = req.body.name
-
-    const exist: boolean = products.every((product) => product.name === name)
-
-    if(!exist){
-        return next()
-    }
-    
-    return res.status(409).json({
-        "message": "Product already registered" 
+    req.body.forEach((product: IProduct) => {
+        products.forEach((item: IProduct) => {
+            if(product.name === item.name){
+                return res.status(409).json({
+                    "error": "Product already registered"
+                })
+            }
+        })
     })
+
+
+    return next()
+}
+
+const validatePathName = (req: Request, res: Response, next: NextFunction): Response | void => {
+
+    products.forEach((product) => {
+        if(req.body.name === product.name){
+            return res.status(409).json({
+                "error": "Product already registered"
+            })
+        }
+    })
+
+    return next()
+
+}
+
+const ensurePathData = (req: Request, res: Response, next: NextFunction): Response | void => {
+
+    delete req.body?.id
+    delete req.body?.section
+    delete req.body?.expirationDate
+
+    return next()
 }
 
 export {
     validateId,
-    validateName
+    validatePostName,
+    validatePathName,
+    ensurePathData
 }

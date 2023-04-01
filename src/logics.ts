@@ -15,7 +15,7 @@ const getProducts = (req: Request, res: Response): Response => {
 
     const AllProdutcs = {
         "total": qtdProdutcs(),
-        "marketProdutcs": products
+        "marketProducts": products
     }
 
     return res.json(AllProdutcs)
@@ -29,7 +29,7 @@ const getProductsByID = (req: Request, res: Response): Response => {
         }
     })
 
-    return res.json(product)
+    return res.json(product[0])
 }
 
 const postProducts = (req: Request, res: Response): Response => {
@@ -50,11 +50,48 @@ const postProducts = (req: Request, res: Response): Response => {
         })
     })
 
-    return res.status(201).json(products)
+    return res.status(201).json({
+        "total": qtdProdutcs(),
+        "marketProducts": products
+    })
 }
+
+const patchProducts = (req: Request, res: Response): Response => {
+
+    const alterations: IProduct = req.body
+    
+    const productId: number = parseInt(req.params.id)
+
+    let product: IFoodProduct | ICleaningProduct | undefined = products.find((product) => {
+        return product.id === productId
+    })
+
+    product = {
+        ...product,
+        ...alterations
+    }
+
+    const productIndex: number = products.findIndex((product) => product.id === productId)
+    
+    products[productIndex] = product!
+
+    return res.json(product)
+}
+
+const deleteProduct = (req: Request, res: Response): Response => {
+
+    const id: number = parseInt(req.params.id)
+
+    products.splice(id - 1,1)
+
+    return res.status(204).send()
+}
+
 
 export {
     getProducts,
     getProductsByID,
-    postProducts
+    postProducts,
+    patchProducts,
+    deleteProduct
 }
