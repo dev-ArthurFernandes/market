@@ -1,19 +1,10 @@
 import { IProduct } from "./intefaces"
 
-let products: Array<IProduct> = [
-    {
-        "id": 1,
-        "name": "Uva",
-        "price": 12,
-        "weight": 320,
-        "section": "food",
-        "expirationDate": expirationDate()
-    }
-]
+let products: Array<IProduct> = []
 
 const newId = (): number => {
 
-    let id: number = 0
+    let id: number = 1
 
     products.map((product) => {
         id = product.id + 1
